@@ -9,6 +9,16 @@
   --amber: #b06e12;
   --green: #4f7a2a;
   --glow: rgba(212, 80, 26, 0.18);
+  --light-close: #ff5f57;
+  --light-min: #febc2e;
+  --light-zoom: #28c840;
+  --glyph-close: #8c1a10;
+  --glyph-min: #985712;
+  --glyph-zoom: #0b650d;
+  --dock-top: #2c2925;
+  --dock-bottom: #151311;
+  --dock-ink: #ff7a3d;
+  --shadow: rgba(0, 0, 0, 0.35);
   --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
   color-scheme: light;
 }
@@ -30,7 +40,9 @@
 }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scrollbar-color: var(--line) var(--page); }
+html, body { overflow-x: clip; }
+::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); color: var(--ink); }
 
 body {
   margin: 0;
@@ -38,13 +50,16 @@ body {
   background: var(--page);
   color: var(--ink);
   font: 15px/1.65 var(--mono);
+  caret-color: var(--accent);
   padding: 40px 20px 60px;
 }
 
 a { color: inherit; text-decoration-color: var(--accent); text-underline-offset: 3px; }
 a:hover { color: var(--accent); }
+a:active { opacity: 0.75; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
 code { font: inherit; color: var(--amber); }
-p { margin: 0 0 12px; }
+p { margin: 0 0 12px; text-wrap: pretty; }
 
 .sr-only {
   position: absolute;
@@ -97,9 +112,9 @@ p { margin: 0 0 12px; }
 .dots button::before { content: ""; position: absolute; inset: -4px; }
 .dots svg { width: 12px; height: 12px; opacity: 0; }
 .dots:hover svg { opacity: 1; }
-.dots .close { background: #ff5f57; color: #8c1a10; }
-.dots .min { background: #febc2e; color: #985712; }
-.dots .zoom { background: #28c840; color: #0b650d; }
+.dots .close { background: var(--light-close); color: var(--glyph-close); }
+.dots .min { background: var(--light-min); color: var(--glyph-min); }
+.dots .zoom { background: var(--light-zoom); color: var(--glyph-zoom); }
 .bar .title { text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bar .lang { justify-self: end; text-decoration: none; }
 .bar .lang b { color: var(--accent); font-weight: 600; }
@@ -108,10 +123,10 @@ p { margin: 0 0 12px; }
 
 /* Prompt und Ausgabe */
 .block { margin-bottom: 34px; }
-.prompt { margin: 0 0 10px; overflow-wrap: anywhere; }
+.prompt { margin: 0 0 10px; overflow-wrap: break-word; }
 .ps1 { white-space: nowrap; color: var(--muted); }
 .ps1 b { color: var(--accent); font-weight: 600; }
-.cmd { color: var(--ink); font-weight: 600; }
+.cmd { display: inline-block; color: var(--ink); font-weight: 600; }
 .out { max-width: 72ch; }
 .dim { color: var(--muted); }
 .hl { color: var(--accent); }
@@ -145,14 +160,7 @@ h1 {
   height: 148px;
   border-radius: 10px;
   overflow: hidden;
-  background:
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.08) 0 1px, transparent 1px 3px),
-    linear-gradient(135deg, var(--accent), var(--amber));
-  display: grid;
-  place-items: center;
-  color: #fff;
-  font-size: 40px;
-  font-weight: 700;
+  background: var(--line);
 }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
 .fetch dl { margin: 0; }
@@ -219,7 +227,7 @@ h1 {
   width: 72px;
   height: 72px;
   border-radius: 17px;
-  box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 18px -6px var(--shadow);
 }
 .app-head h3 { margin: 0; font-size: 20px; }
 .app-head p { margin: 0; color: var(--muted); font-size: 14px; }
@@ -237,6 +245,7 @@ h1 {
   transition: background 0.2s, color 0.2s;
 }
 .button:hover { background: var(--accent); color: var(--win); }
+.button:active { transform: translateY(1px); }
 
 /* git shortlog */
 .shortlog { list-style: none; margin: 0; padding: 0; }
@@ -273,6 +282,7 @@ h1 {
   flex-wrap: wrap;
   gap: 6px 18px;
   justify-content: space-between;
+  text-wrap: balance;
 }
 
 /* Fensterzustände und Dock (Easter Egg, siehe window.js) */
@@ -299,7 +309,7 @@ h1 {
   visibility: hidden;
 }
 .win-docked .dock { transform: translate(-50%, 0); visibility: visible; }
-.motion .dock { transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.15), visibility 0s 0.35s; }
+.motion .dock { transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s 0.35s; }
 .motion.win-docked .dock { transition-delay: 0s; }
 .dock-icon {
   position: relative;
@@ -310,9 +320,9 @@ h1 {
   padding: 0;
   border: 0;
   border-radius: 11px;
-  background: linear-gradient(#2c2925, #151311);
+  background: linear-gradient(var(--dock-top), var(--dock-bottom));
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  color: #ff7a3d;
+  color: var(--dock-ink);
   font: 700 17px var(--mono);
   cursor: pointer;
   transition: transform 0.2s ease-out;
@@ -359,7 +369,7 @@ h1 {
   .bar { grid-template-columns: auto 1fr auto; }
   .screen { padding: 20px 16px 28px; }
   .fetch { flex-direction: column; gap: 16px; }
-  .avatar { width: 112px; height: 112px; font-size: 32px; }
+  .avatar { width: 112px; height: 112px; }
   .ls a { grid-template-columns: 9ch 1fr; }
   .ls .perm { display: none; }
   .shortlog li { grid-template-columns: 2ch 1fr; }
@@ -375,6 +385,12 @@ h1 {
 }
 .motion .wave.go { animation: wave 1.6s ease-in-out 0.3s 2; }
 .motion h1:hover .wave { animation: wave 1.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor { animation: none; }
+  .app, .dock-icon, .button { transition: none; }
+  .dock-icon:hover { transform: none; }
+}
 
 @keyframes blink { 50% { opacity: 0; } }
 @keyframes wave {
