@@ -37,7 +37,7 @@
     const typed = document.createElement('span');
     typed.setAttribute('aria-hidden', 'true');
     cmd.replaceChildren(full, typed);
-    cmd.style.minWidth = `${text.length}ch`;
+    cmd.style.minWidth = `min(${text.length}ch, 100%)`;
     return { block: cmd.closest('.block'), typed, text };
   });
   if (jobs.length) jobs[0].typed.after(cursor);

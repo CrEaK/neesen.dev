@@ -127,7 +127,7 @@ p { margin: 0 0 12px; text-wrap: pretty; }
 .prompt { margin: 0 0 10px; overflow-wrap: break-word; }
 .ps1 { white-space: nowrap; color: var(--muted); }
 .ps1 b { font-weight: 600; }
-.cmd { display: inline-block; color: var(--ink); font-weight: 600; }
+.cmd { display: inline-block; max-width: 100%; overflow-wrap: anywhere; color: var(--ink); font-weight: 600; }
 .out { max-width: 72ch; }
 .dim { color: var(--muted); }
 .hl { color: var(--accent); }
